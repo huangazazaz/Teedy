@@ -11,6 +11,22 @@ pipeline {
                 sh 'mvn pmd:pmd'
             }
         }
+        stage('Build Image') {
+                steps {
+                    script {
+                        docker.build(env.DOCKER_IMAGE)
+                    }
+                }
+            }
+        stage('Push Image') {
+            steps {
+                script {
+                    docker.withRegistry('https://debuuguuer', 'teedy') {
+                        docker.image(env.DOCKER_IMAGE).push("latest")
+                    }
+                }
+            }
+        }
     }
 
     post{
