@@ -12,12 +12,12 @@ pipeline {
             }
         }
         stage('Build Image') {
-                steps {
-                    script {
-                        docker.build(env.DOCKER_IMAGE)
-                    }
+            steps {
+                script {
+                    docker.build(env.DOCKER_IMAGE)
                 }
             }
+        }
         stage('Push Image') {
             steps {
                 script {
