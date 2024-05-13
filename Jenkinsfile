@@ -6,34 +6,11 @@ pipeline {
                 sh 'mvn -B -DskipTests clean package'
             }
         }
-        stage('pmd') {
+        stage('K8s') {
             steps {
-                sh 'mvn pmd:pmd'
-            }
-        }
-        stage('Build Image') {
-            steps {
-                script {
-                    docker.build(env.DOCKER_IMAGE)
-                }
-            }
-        }
-        stage('Push Image') {
-            steps {
-                script {
-                    docker.withRegistry('https://debuuguuer', 'teedy') {
-                        docker.image(env.DOCKER_IMAGE).push("latest")
-                    }
-                }
+                sh 'kubectl set image deployments/hello-node container-name=image-id'
             }
         }
     }
 
-    post{
-        always {
-            archiveArtifacts artifacts: '**/target/site/**', fingerprint: true
-            archiveArtifacts artifacts: '**/target/**/*.jar', fingerprint: true
-            archiveArtifacts artifacts: '**/target/**/*.war', fingerprint: true
-        }
-    }
 }
